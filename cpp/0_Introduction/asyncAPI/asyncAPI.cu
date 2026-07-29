@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
     int            devID;
     cudaDeviceProp deviceProps;
 
-    printf("[%s] - Starting...\n", argv[0]);
+    printf("[%s] - Starting now...\n", argv[0]);
 
     // This will pick the best possible CUDA capable device
     devID = findCudaDevice(argc, (const char **)argv);

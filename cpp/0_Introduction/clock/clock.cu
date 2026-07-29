@@ -87,7 +87,7 @@ __global__ static void timedReduction(const float *input, float *output, clock_t
         timer[bid + gridDim.x] = clock();
 }
 
-#define NUM_BLOCKS  64
+#define NUM_BLOCKS  32
 #define NUM_THREADS 256
 
 // It's interesting to change the number of blocks and the number of threads to

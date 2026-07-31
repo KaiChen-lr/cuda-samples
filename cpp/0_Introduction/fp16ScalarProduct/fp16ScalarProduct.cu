@@ -88,13 +88,15 @@ __forceinline__ __device__ void reduceInShared_native(half2 *const v)
 __global__ void
 scalarProductKernel_intrinsics(half2 const *const a, half2 const *const b, float *const results, size_t const size)
 {
-    const int        stride = gridDim.x * blockDim.x;
+    const int        stride = gridDim.x * blockDim.x; 
+    // The interval, N_block * N_thread, total number of threads being executed
     __shared__ half2 shArray[NUM_OF_THREADS];
 
     shArray[threadIdx.x] = __float2half2_rn(0.f);
-    half2 value          = __float2half2_rn(0.f);
+    half2 value          = __float2half2_rn(0.f); // Convert float 0 to half2
 
     for (int i = threadIdx.x + blockDim.x * blockIdx.x; i < size; i += stride) {
+        // For each thread from different block and grid, do a[thread]*b[thread] and accumulate to value. 
         value = __hfma2(a[i], b[i], value);
     }
 
@@ -199,6 +201,7 @@ int main(int argc, char *argv[])
     printf("Result intrinsics\t: %f \n", result_intrinsics);
 
     printf("&&&& fp16ScalarProduct %s\n", (fabs(result_intrinsics - result_native) < 0.00001) ? "PASSED" : "FAILED");
+    // Compare the reloaded * and __hfma2()
 
     for (int i = 0; i < 2; ++i) {
         checkCudaErrors(cudaFree(devVec[i]));

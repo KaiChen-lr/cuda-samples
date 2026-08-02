@@ -55,8 +55,10 @@
  * Matrix multiplication (CUDA Kernel) on the device: C = A * B
  * wA is A's width and wB is B's width
  */
+ // A, B and C are stored as flattened by row matrices
 template <int BLOCK_SIZE> __global__ void MatrixMulCUDA(float *C, float *A, float *B, int wA, int wB)
 {
+    // A: Unknown*wA, B: wA*wB
     // Block index
     int bx = blockIdx.x;
     int by = blockIdx.y;
@@ -303,6 +305,9 @@ int main(int argc, char **argv)
     int dev = findCudaDevice(argc, (const char **)argv);
 
     int block_size = 32;
+
+    // Width is the number of columns, height is the number of rows
+    // For A*B, n_column_A must be equal to n_row_B, which means wA=hB
 
     dim3 dimsA(5 * 2 * block_size, 5 * 2 * block_size, 1);
     dim3 dimsB(5 * 4 * block_size, 5 * 2 * block_size, 1);
